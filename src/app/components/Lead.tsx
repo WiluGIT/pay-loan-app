@@ -133,7 +133,7 @@ export default function Lead() {
                                 // onChange={handleChange}
                                 className='bg-[#151030] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
                             />
-                            <span className='text-white font-medium'>Wyrażam zgodę na przetwarzanie moich danych osobowych w celu marketingowym oraz na przesyłanie za pośrednictwem środków komunikacji elektronicznej informacji handlowych przez Krystian Jarosik Sp. z o.o. z siedzibą pod adresem Pod Mostem, 03-994 Warszawa</span>
+                            <span className='text-white font-medium'>Wyrażam zgodę na przetwarzanie moich danych osobowych w celu marketingowym oraz na przesyłanie za pośrednictwem środków komunikacji elektronicznej informacji handlowych przez Sp. z o.o. z siedzibą pod adresem Pod Mostem, 03-994 Warszawa</span>
                         </label>
                         {/* <label className='flex flex-row items-center gap-5'>
                             <input
