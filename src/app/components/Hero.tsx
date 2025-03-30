@@ -5,6 +5,7 @@ import DirectoryCard from './DirectoryCard'
 import Image from "next/image";
 
 export default function Hero() {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const handleContactSubmit = (contactData: any) => {
         console.log('Contact info submitted:', contactData);
         // Handle the contact data (e.g., save to database)
