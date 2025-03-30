@@ -3,6 +3,7 @@
 import React from 'react'
 import DirectoryCard from './DirectoryCard'
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 export default function Hero() {
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -53,13 +54,20 @@ export default function Hero() {
                             className="transition-opacity"
                         />
                     </div>
-                    <div className='w-[80%] xl:w-[350px]'>
-                        <DirectoryCard
-                            title="Złóż wniosek"
-                            subtitle="Niezwłocznie się z Tobą skontaktujemy!"
-                            onSubmit={handleContactSubmit}
-                        />
-                    </div>
+                    <motion.div
+                        initial={{ x: "100%", opacity: 0 }}
+                        whileInView={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: false }}
+                    >
+                        <div className='w-[80%] xl:w-[350px]'>
+                            <DirectoryCard
+                                title="Złóż wniosek"
+                                subtitle="Niezwłocznie się z Tobą skontaktujemy!"
+                                onSubmit={handleContactSubmit}
+                            />
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </section>
