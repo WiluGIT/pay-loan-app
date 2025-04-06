@@ -4,6 +4,7 @@ import React from 'react'
 import DirectoryCard from './DirectoryCard'
 import Image from "next/image";
 import { motion } from 'framer-motion';
+import { scrollToSection } from '../utils/scrollToSection';
 
 export default function Hero() {
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -11,6 +12,11 @@ export default function Hero() {
         console.log('Contact info submitted:', contactData);
         // Handle the contact data (e.g., save to database)
     };
+
+    const handleButtonClick = () => {
+        console.log('dupa')
+        scrollToSection("lead");
+    }
     return (
         <section className='mx-auto container relative'>
             {/* <div className='mx-auto max-w-[1300px] h-[700px] bg-auto bg-no-repeat bg-[position:46%_100%] bg-[url(https://kredytnachwilowki.pl/wp-content/uploads/2023/03/gfx_hero_bg.png)]'> */}
@@ -34,6 +40,7 @@ export default function Hero() {
                             <button
                                 type="submit"
                                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                onClick={handleButtonClick}
                             >
                                 Złóż wniosek
                             </button>
@@ -41,7 +48,7 @@ export default function Hero() {
                     </div>
                     <div className='relative h-[500px] xl:h-full xl:absolute w-full z-[-1]'>
                         <Image
-                            src="/heroimg.png"
+                            src="/pan.png"
                             alt="Company Logo"
                             fill
                             priority
@@ -59,10 +66,11 @@ export default function Hero() {
                         whileInView={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         viewport={{ once: false }}
+                        className='w-[80%] xl:w-[350px]'
                     >
-                        <div className='w-[80%] xl:w-[350px]'>
+                        <div className='w'>
                             <DirectoryCard
-                                title="Złóż wniosek"
+                                title="Wypełnij formularz"
                                 subtitle="Niezwłocznie się z Tobą skontaktujemy!"
                                 onSubmit={handleContactSubmit}
                             />

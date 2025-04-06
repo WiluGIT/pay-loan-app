@@ -50,10 +50,11 @@ export default function DirectoryCard({
             </div> */}
 
             {/* Directory/Folder Card */}
-            <div className="bg-[#cc8d52] rounded-t-lg rounded-b-lg shadow-lg overflow-hidden">
+            {/* <div className="bg-[#cc8d52] rounded-t-lg rounded-b-lg shadow-lg overflow-hidden"> */}
+            <div className="bg-[#192e4d] rounded-t-lg rounded-b-lg shadow-lg overflow-hidden">
                 {/* Card Header */}
-                <div className="bg-[#ca8c51] px-6 py-4 border-white shadow-2xl">
-                    <h2 className="text-2xl font-bold text-white">{title}</h2>
+                <div className="bg-[#192e4d] px-6 py-4 shadow-2xl">
+                    <h2 className="text-3xl font-bold text-white">{title}</h2>
                     <p className="text-white mt-1">{subtitle}</p>
                 </div>
 
@@ -73,7 +74,7 @@ export default function DirectoryCard({
                                         name="firstName"
                                         value={contactInfo.firstName}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border rounded-md shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full bg-[#304b6b] px-3 py-2 border rounded-md shadow-xl focus:outline-none focus:ring-2"
                                         required
                                     />
                                 </div>
@@ -90,7 +91,7 @@ export default function DirectoryCard({
                                     name="phoneNumber"
                                     value={contactInfo.phoneNumber}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 border rounded-md shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full bg-[#304b6b] px-3 py-2 border rounded-md shadow-xl focus:outline-none focus:ring-2"
                                     required
                                 />
                             </div>
@@ -106,7 +107,7 @@ export default function DirectoryCard({
                                     name="emailAddress"
                                     value={contactInfo.emailAddress}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 border rounded-md shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full bg-[#304b6b] px-3 py-2 border rounded-md shadow-xl focus:outline-none focus:ring-2"
                                     required
                                 />
                             </div>

@@ -14,11 +14,9 @@ export default function Navbar(): JSX.Element {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
     const navItems: NavItem[] = [
-        { id: 'about', label: 'Aboutóżćź' },
-        { id: 'services', label: 'Services' },
-        { id: 'portfolio', label: 'Portfolio' },
-        { id: 'testimonials', label: 'Testimonials' },
-        { id: 'contact', label: 'Contact' }
+        { id: 'instruction', label: 'Instrukcja' },
+        { id: 'lead', label: 'Złóż wniosek' },
+        { id: 'faq', label: 'FAQ' },
     ];
 
     // Change navbar style on scroll
@@ -39,7 +37,7 @@ export default function Navbar(): JSX.Element {
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent): void => {
             const target = event.target as HTMLElement;
-            if (isMobileMenuOpen && !target.closest('.mobile-menu-container')) {
+            if (isMobileMenuOpen && (!target.closest('.mobile-menu-item') && !target.closest('.mobile-menu-container'))) {
                 setIsMobileMenuOpen(false);
             }
         };
@@ -74,7 +72,7 @@ export default function Navbar(): JSX.Element {
                     >
                         <div className="relative h-15 w-30">
                             <Image
-                                src="/logo-full.png"
+                                src="/logo-basic.png"
                                 alt="Company Logo"
                                 fill
                                 priority
@@ -94,7 +92,7 @@ export default function Navbar(): JSX.Element {
                         <a
                             key={item.id}
                             href={`#${item.id}`}
-                            className="hover:text-blue-500 transition-colors"
+                            className="text-white hover:text-[#4988e5] relative after:absolute after:bottom-[-10px] after:left-[50%] after:h-[2px] after:w-0 after:bg-[#ffa61f] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
                             onClick={(e: React.MouseEvent<HTMLAnchorElement>): void => {
                                 e.preventDefault();
                                 handleNavItemClick(item.id);
@@ -108,7 +106,7 @@ export default function Navbar(): JSX.Element {
                 {/* Mobile Menu Button */}
                 <div className="md:hidden mobile-menu-container">
                     <button
-                        className="p-2 focus:outline-none"
+                        className="p-2 focus:outline-none cursor-pointer"
                         onClick={toggleMobileMenu}
                         aria-label="Toggle mobile menu"
                     >
@@ -127,15 +125,14 @@ export default function Navbar(): JSX.Element {
 
             {/* Mobile Menu Dropdown */}
             <div
-                className={`md:hidden absolute w-[90%] right-[5%] rounded-xl bg-[#152c2c] shadow-2xl py-2 px-4 mt-4 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-                    }`}
+                className={`md:hidden absolute w-[90%] right-[5%] rounded-xl bg-[#0F1928] shadow-2xl py-2 px-4 mt-4 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}
             >
                 <div className="flex flex-col space-y-4 py-2">
                     {navItems.map((item) => (
                         <a
                             key={item.id}
                             href={`#${item.id}`}
-                            className="text-white-800 hover:bg-[#275252] rounded-lg transition-colors py-2 px-4 border-gray-100"
+                            className="mobile-menu-item text-white-800 hover:bg-[#1e4d94] rounded-lg transition-colors py-2 px-4 border-gray-100"
                             onClick={(e: React.MouseEvent<HTMLAnchorElement>): void => {
                                 e.preventDefault();
                                 handleNavItemClick(item.id);

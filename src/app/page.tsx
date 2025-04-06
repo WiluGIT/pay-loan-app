@@ -4,6 +4,7 @@ import Hero from "@/app/components/Hero";
 import Steps from "@/app/components/Steps";
 //import WhyUs from "@/app/components/WhyUs";
 import Lead from "./components/Lead";
+import Faq from "./components/Faq";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Steps />
       {/* <WhyUs /> */}
       <Lead />
+      <Faq />
     </Container>
   );
 }
