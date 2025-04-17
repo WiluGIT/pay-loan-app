@@ -153,7 +153,7 @@ export default function Lead() {
                 viewport={{ once: false }}
                 className="flex flex-col items-center justify-center my-5"
             >
-                <h1 className='my-5'>
+                <h1 className='my-5 text-center'>
                     <span className='text-5xl font-bold'>Złóż wniosek Online</span>
                 </h1>
                 <div className='bg-[#192e4d] w-[80%] rounded-2xl gap-10 overflow-hidden shadow-2xl'>

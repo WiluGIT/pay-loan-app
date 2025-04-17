@@ -7,6 +7,8 @@ import { GiMoneyStack } from 'react-icons/gi'
 import { motion } from 'framer-motion'
 import { MdQuestionAnswer } from 'react-icons/md'
 import { TbAnalyze } from 'react-icons/tb'
+import { LiaPenFancySolid } from 'react-icons/lia'
+import { AiFillSignature, AiOutlineSignature } from 'react-icons/ai'
 
 export default function Steps() {
     return (
@@ -43,7 +45,7 @@ export default function Steps() {
                         <StepCard
                             title='Krok 4'
                             subtitle='Podpisz umowę, a my jeszcze tego samego dnia spłacimy Twoje zobowiązania i zamienimy je w jedną dogodną ratę.'
-                            Icon={FaFileSignature}
+                            Icon={AiOutlineSignature}
                         />
                     </div>
                 </motion.div>
