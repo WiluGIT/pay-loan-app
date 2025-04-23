@@ -5,22 +5,32 @@ import DirectoryCard from './DirectoryCard'
 import Image from "next/image";
 import { motion } from 'framer-motion';
 import { scrollToSection } from '../utils/scrollToSection';
+import { ContactInfo } from '@/types/types';
+import { toast } from 'sonner';
+import { ELEMENT } from '@/consts/consts';
+import { Button } from '@/components/ui/button';
+import { supabase } from "@/app/utils/supabaseClient";
 
 export default function Hero() {
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    const handleContactSubmit = (contactData: any) => {
+    const handleContactSubmit = async (contactData: ContactInfo) => {
         console.log('Contact info submitted:', contactData);
-        // Handle the contact data (e.g., save to database)
-    };
+
+        const { error } = await supabase.from("Leads").insert([contactData]);
+        if (error) {
+            toast.error('Nie udało się wysłać formularza');
+            return;
+        }
+
+        toast.success('Formularz wysłany poprawnie');
+    }
 
     const handleButtonClick = () => {
-        console.log('dupa')
-        scrollToSection("lead");
+        scrollToSection(ELEMENT.LEAD);
     }
+
     return (
-        <section className='mx-auto container relative'>
-            {/* <div className='mx-auto max-w-[1300px] h-[700px] bg-auto bg-no-repeat bg-[position:46%_100%] bg-[url(https://kredytnachwilowki.pl/wp-content/uploads/2023/03/gfx_hero_bg.png)]'> */}
-            <div className='mx-auto xl:h-[700px]'>
+        <section className='mx-auto container pt-[90px]'>
+            <div className='mx-auto xl:h-[700px] relative'>
                 <div className='h-full flex flex-col xl:flex-row xl:justify-between justify-center items-center'>
                     <div className='w-[80%] xl:w-[350px] my-5 xl:my-0'>
                         <h1 className='text-5xl text-center mb-5 font-bold'>
@@ -37,13 +47,7 @@ export default function Hero() {
                             </span>
                         </div>
                         <div>
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                onClick={handleButtonClick}
-                            >
-                                Złóż wniosek
-                            </button>
+                            <Button onClick={handleButtonClick} className='w-full bg-[#304b6b]' variant={'primary'}>Złóż wniosek</Button>
                         </div>
                     </div>
                     <div className='relative h-[500px] xl:h-full xl:absolute w-full z-[-1]'>
@@ -52,8 +56,6 @@ export default function Hero() {
                             alt="Company Logo"
                             fill
                             priority
-                            //height={500}
-                            //width={100}
                             quality={90}
                             style={{
                                 objectFit: 'contain'

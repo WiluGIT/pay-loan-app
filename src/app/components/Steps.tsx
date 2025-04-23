@@ -1,24 +1,22 @@
 "use client"
 
 import React from 'react'
-import { FaFileSignature } from 'react-icons/fa6'
 import StepCard from './StepCard'
 import { GiMoneyStack } from 'react-icons/gi'
 import { motion } from 'framer-motion'
 import { MdQuestionAnswer } from 'react-icons/md'
 import { TbAnalyze } from 'react-icons/tb'
-import { LiaPenFancySolid } from 'react-icons/lia'
-import { AiFillSignature, AiOutlineSignature } from 'react-icons/ai'
+import { AiOutlineSignature } from 'react-icons/ai'
 
 export default function Steps() {
     return (
-        <section id='instruction' className='mt-5 xl:mt-0 background-gradient2'>
+        <section id='instruction' className='mt-5 xl:mt-0 background-gradient-secondary'>
             <div className='flex flex-col items-center px-5'>
                 <h1 className='py-15 font-bold text-5xl text-center'>
                     <span>Weź kredyt bankowy na chwilówki w czterech krokach!</span>
                 </h1>
                 <motion.div
-                    initial={{ y: "50%", opacity: 0 }}
+                    initial={{ y: "30%", opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5 }}
                     viewport={{ once: false }}

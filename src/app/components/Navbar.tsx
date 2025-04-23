@@ -3,6 +3,7 @@
 import React, { JSX, useEffect, useState } from 'react'
 import { scrollToSection } from '@/app/utils/scrollToSection';
 import Image from "next/image";
+import { ELEMENT } from '@/consts/consts';
 
 interface NavItem {
     id: string;
@@ -14,9 +15,9 @@ export default function Navbar(): JSX.Element {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
     const navItems: NavItem[] = [
-        { id: 'instruction', label: 'Instrukcja' },
-        { id: 'lead', label: 'Złóż wniosek' },
-        { id: 'faq', label: 'FAQ' },
+        { id: ELEMENT.INSTRUCTION, label: 'Instrukcja' },
+        { id: ELEMENT.LEAD, label: 'Złóż wniosek' },
+        { id: ELEMENT.FAQ, label: 'FAQ' },
     ];
 
     // Change navbar style on scroll
@@ -58,8 +59,7 @@ export default function Navbar(): JSX.Element {
     };
 
     return (
-        // <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2 text-gray-800' : 'bg-transparent py-4 text-white'}`}>
-        <nav className={`top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-4 text-gray-800' : 'bg-transparent py-8 text-white'}`}>
+        <nav className={`fixed top-0 left-0 w-full z-50 transition-all max-w-[100vw] duration-300 text-white ${isScrolled ? 'bg-[#192e4d] shadow-md py-2 text-gray-800' : 'bg-transparent py-4 '}`}>
             <div className="container mx-auto px-4 flex justify-between items-center">
                 <div className="flex items-center">
                     <a

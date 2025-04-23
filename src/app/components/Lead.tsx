@@ -1,151 +1,69 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { supabase } from "@/app/utils/supabaseClient";
+import { z } from "zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { LeadInfo } from '@/types/types';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
 
-interface ContactFormData {
-    name: string;
-    email: string;
-    loanAmount: string;
-    incomeSource: string;
-    incomeAmount: string;
-}
+const FormSchema = z.object({
+    name: z.string().min(1, {
+        message: "Pole Imię i nazwisko jest wymagane.",
+    }),
+    email: z.string().min(1, {
+        message: "Pole Adres e-mail jest wymagane.",
+    }).email({
+        message: "Pole Adres e-mail jest nieprawidłowe.",
+    }),
+    loanAmount: z.string().min(1, {
+        message: 'Pole Wnioskowana kwota pożyczki jest wymagane.'
+    }),
+    incomeSource: z.string().min(1, {
+        message: 'Pole Źródło dochodu jest wymagane.'
+    }),
+    incomeAmount: z.string().min(1, {
+        message: 'Pole Kwota średniego miesięcznego dochodu jest wymagane.'
+    }),
+    termsAccepted: z.boolean().refine(val => val === true, { // Dodany checkbox
+        message: "Wymagana jest akceptacja warunków.",
+    }),
+})
 
 export default function Lead() {
-    const formRef = useRef<HTMLFormElement>(null!);
-    const [form, setForm] = useState<ContactFormData>({
-        name: '',
-        email: '',
-        loanAmount: '',
-        incomeSource: '',
-        incomeAmount: ''
+    const form = useForm<LeadInfo>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            loanAmount: "",
+            incomeSource: "",
+            incomeAmount: "",
+            termsAccepted: false,
+        },
     });
-    const [loading, setLoading] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+    const handleSubmit = async (data: LeadInfo) => {
+        console.log("Data LEAD:", data);
 
-        console.log(name, value);
-        setForm({ ...form, [name]: value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setLoading(true);
-
-        const { error } = await supabase.from("Leads").insert([form]);
-
+        const { error } = await supabase.from("Leads").insert([data]);
         if (error) {
-            console.error("Error inserting data:", error.message);
-        } else {
-            setForm({
-                name: '',
-                email: '',
-                loanAmount: '',
-                incomeSource: '',
-                incomeAmount: ''
-            });
+            toast.error('Nie udało się wysłać formularza');
+            return;
         }
 
-        setLoading(false);
+        toast.success('Formularz wysłany poprawnie');
+        form.reset();
     };
 
     return (
         <section id="lead" className='flex justify-center'>
-            {/* <motion.div
-                initial={{ x: "0%", opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, ease: "easeIn" }}
-                viewport={{ once: false }}
-                className="flex flex-col items-center justify-center my-5"
-            >
-                <h1 className='my-5'>
-                    <span className='text-5xl font-bold'>Złóż wniosek Online</span>
-                </h1>
-                <div className='bg-[#192e4d] w-[80%] rounded-2xl gap-10 '>
-                    <h3 className='t'>Uzupełnij dane kontaktowe oraz finansowe</h3>
-                    <form
-                        ref={formRef}
-                        onSubmit={handleSubmit}
-                        className='flex flex-col gap-8 p-10'
-                    >
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Imię i nazwisko</span>
-                            <input
-                                type='text'
-                                name='name'
-                                value={form.name}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij imię i nazwisko"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Email</span>
-                            <input
-                                type='email'
-                                name='email'
-                                value={form.email}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij adres e-mail"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Wnioskowana kwota pożyczki</span>
-                            <input
-                                type='number'
-                                name='loanAmount'
-                                value={form.loanAmount}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij kwotę pożyczki"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary no-spinner text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Źródło dochodu</span>
-                            <input
-                                type='text'
-                                name='incomeSource'
-                                value={form.incomeSource}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij źródło swojego dochodu"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary no-spinner text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Kwota średniego miesięcznego dochodu</span>
-                            <input
-                                type='number'
-                                name='incomeAmount'
-                                value={form.incomeAmount}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij kwotę miesięcznego dochodu"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary no-spinner text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-row items-center gap-5'>
-                            <input
-                                name='accept'
-                                type='checkbox'
-                                //value={form.message}
-                                // onChange={handleChange}
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                            <span className='text-white font-medium'>Wyrażam zgodę na przetwarzanie moich danych osobowych w celu marketingowym oraz na przesyłanie za pośrednictwem środków komunikacji elektronicznej informacji handlowych przez Sp. z o.o. z siedzibą pod adresem Pod Mostem, 03-994 Warszawa</span>
-                        </label>
-                        <button
-                            type='submit'
-                            className='bg-[#304b6b] pointer py-3 px-8 outline-none w-fit text-white font-bold shadow-md shadow-primary rounded-xl'
-                        >
-                            {loading ? 'Wysyłam...' : 'Wyślij wniosek'}
-                        </button>
-                    </form>
-                </div>
-            </motion.div> */}
-
-
             <motion.div
                 initial={{ x: "-100%", opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
@@ -156,85 +74,103 @@ export default function Lead() {
                 <h1 className='my-5 text-center'>
                     <span className='text-5xl font-bold'>Złóż wniosek Online</span>
                 </h1>
-                <div className='bg-[#192e4d] w-[80%] rounded-2xl gap-10 overflow-hidden shadow-2xl'>
+                <div className='bg-[#192e4d] w-[80%] rounded-2xl gap-10 shadow-2xl'>
                     <h3 className='text-2xl text-center font-bold shadow-2xl p-10'>Uzupełnij dane kontaktowe oraz finansowe</h3>
-                    <form
-                        ref={formRef}
-                        onSubmit={handleSubmit}
-                        className='flex flex-col gap-8 p-10'
-                    >
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Imię i nazwisko</span>
-                            <input
-                                type='text'
-                                name='name'
-                                value={form.name}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij imię i nazwisko"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Email</span>
-                            <input
-                                type='email'
-                                name='email'
-                                value={form.email}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij adres e-mail"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Wnioskowana kwota pożyczki</span>
-                            <input
-                                type='number'
-                                name='loanAmount'
-                                value={form.loanAmount}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij kwotę pożyczki"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary no-spinner text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Źródło dochodu</span>
-                            <input
-                                type='text'
-                                name='incomeSource'
-                                value={form.incomeSource}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij źródło swojego dochodu"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary no-spinner text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-col'>
-                            <span className='text-white font-medium mb-4'>Kwota średniego miesięcznego dochodu</span>
-                            <input
-                                type='number'
-                                name='incomeAmount'
-                                value={form.incomeAmount}
-                                onChange={handleChange}
-                                placeholder="Uzupełnij kwotę miesięcznego dochodu"
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary no-spinner text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                        </label>
-                        <label className='flex flex-row items-center gap-5'>
-                            <input
-                                name='accept'
-                                type='checkbox'
-                                //value={form.message}
-                                // onChange={handleChange}
-                                className='bg-[#304b6b] py-4 px-6 placeholder:text-secondary text-white rounded-lg outlined-none border-none font-medium'
-                            />
-                            <span className='text-white font-medium'>Wyrażam zgodę na przetwarzanie moich danych osobowych w celu marketingowym oraz na przesyłanie za pośrednictwem środków komunikacji elektronicznej informacji handlowych przez Sp. z o.o. z siedzibą pod adresem Pod Mostem, 03-994 Warszawa</span>
-                        </label>
-                        <button
-                            type='submit'
-                            className='bg-[#304b6b] pointer py-3 px-8 outline-none w-fit text-white font-bold shadow-md shadow-primary rounded-xl'
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(handleSubmit)}
+                            className='flex flex-col gap-8 p-10'
                         >
-                            {loading ? 'Wysyłam...' : 'Wyślij wniosek'}
-                        </button>
-                    </form>
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Imię i nazwisko</FormLabel>
+                                        <FormControl>
+                                            <Input className='bg-[#304b6b]' placeholder='Uzupełnij imię i nazwisko' {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Adres e-mail</FormLabel>
+                                        <FormControl>
+                                            <Input className='bg-[#304b6b]' placeholder='Uzupełnij adres e-mail' {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="loanAmount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Wnioskowana kwota pożyczki</FormLabel>
+                                        <FormControl>
+                                            <Input className='bg-[#304b6b]' placeholder='Uzupełnij wnioskowaną kwotę pożyczki' {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="incomeSource"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Źródło dochodu</FormLabel>
+                                        <FormControl>
+                                            <Input className='bg-[#304b6b]' placeholder='Uzupełnij źródło swojego dochodu' {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="incomeAmount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Kwota średniego miesięcznego dochodu</FormLabel>
+                                        <FormControl>
+                                            <Input className='bg-[#304b6b]' placeholder='Uzupełnij kwotę miesięcznego dochodu' {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="termsAccepted"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <div className="flex items-center space-x-3">
+                                                <Checkbox
+                                                    className='data-[state=checked]:bg-blue-600 data-[state=checked]:border-none'
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    id="termsAccepted"
+                                                />
+                                                <FormLabel htmlFor="termsAccepted">
+                                                    Wyrażam zgodę na przetwarzanie moich danych osobowych w celu marketingowym oraz na przesyłanie za pośrednictwem środków komunikacji elektronicznej informacji handlowych przez Sp. z o.o. z siedzibą pod adresem Pod Mostem, 03-994 Warszawa
+                                                </FormLabel>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button type="submit" variant={'primary'}>Wyślij wniosek</Button>
+                        </form>
+                    </Form>
                 </div>
             </motion.div>
 

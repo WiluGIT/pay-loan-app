@@ -5,6 +5,7 @@ import Steps from "@/app/components/Steps";
 //import WhyUs from "@/app/components/WhyUs";
 import Lead from "./components/Lead";
 import Faq from "./components/Faq";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       {/* <WhyUs /> */}
       <Lead />
       <Faq />
+      <Footer />
     </Container>
   );
 }

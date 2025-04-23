@@ -1,31 +1,24 @@
 "use client";
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useState, FormEvent, JSX } from 'react';
+import { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { FaPhoneVolume } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
-
-interface ContactInfo {
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    emailAddress: string;
-}
+import { ContactInfo } from '@/types/types';
 
 interface DirectoryCardProps {
     title?: string;
     subtitle?: string;
-    onSubmit?: (data: ContactInfo) => void;
+    onSubmit: (data: ContactInfo) => void;
 }
 
 const FormSchema = z.object({
-    username: z.string().min(1, {
+    name: z.string().min(1, {
         message: "Pole Imię i nazwisko jest wymagane.",
     }),
     phone: z.string().min(1, {
@@ -33,7 +26,7 @@ const FormSchema = z.object({
     }).regex(/^\d(?:\s?\d)*$/, {
         message: "Pole Numer telefonu jest nieprawidłowe.",
     }),
-    mail: z.string().min(1, {
+    email: z.string().min(1, {
         message: "Pole Adres e-mail jest wymagane.",
     }).email({
         message: "Pole Adres e-mail jest nieprawidłowe.",
@@ -45,24 +38,18 @@ export default function DirectoryCard({
     subtitle = "Please fill in your details",
     onSubmit
 }: DirectoryCardProps): JSX.Element {
-    const form = useForm<z.infer<typeof FormSchema>>({
+    const form = useForm<ContactInfo>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            username: "",
+            name: "",
             phone: "",
-            mail: "",
+            email: "",
         },
-    })
+    });
 
-    const handleSubmit2 = (data: z.infer<typeof FormSchema>) => {
-        //e.preventDefault();
-        // if (onSubmit) {
-        //     onSubmit(contactInfo);
-        // }
-        console.log(data);
-        console.log("from hook:: ", form.getValues())
-        console.log("dsadsacassdddd!!!!", form.control);
-        toast.success("Poprawnie wysłano formularz");
+    const handleSubmit = (data: ContactInfo) => {
+        onSubmit(data);
+        form.reset();
     };
 
     return (
@@ -90,10 +77,10 @@ export default function DirectoryCard({
                 </div>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleSubmit2)} className="p-6 flex flex-col gap-5">
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="p-6 flex flex-col gap-5">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Imię i nazwisko</FormLabel>
@@ -119,7 +106,7 @@ export default function DirectoryCard({
                         />
                         <FormField
                             control={form.control}
-                            name="mail"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Adres e-mail</FormLabel>
@@ -130,7 +117,7 @@ export default function DirectoryCard({
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className='cursor-pointer'>Wyślij formularz</Button>
+                        <Button type="submit" variant={'primary'}>Wyślij formularz</Button>
                     </form>
                 </Form>
             </div>
